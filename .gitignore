@@ -1,7 +1,5 @@
 main
 create_data
-data*
-output*
-sorted*
+*.txt
 .vscode
 *.o

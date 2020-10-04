@@ -10,8 +10,8 @@ using namespace std;
 
 
 struct Node {
-    int ID;
-    int value;
+    long long ID;
+    long long int value;
 };
 
 class MinHeap {
