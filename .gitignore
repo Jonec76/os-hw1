@@ -1,5 +1,7 @@
-all
+main
+create_data
 data*
 output*
 sorted*
 .vscode
+*.o
