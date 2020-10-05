@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     default_random_engine gen = default_random_engine(rd());
     uniform_int_distribution<int> dis(a, b);
     fstream file;
-    file.open("data_test.txt", ios::out);
+    file.open("input.txt", ios::out);
 
     if (file.fail()) {
         cout << "Can't open file" << endl;
