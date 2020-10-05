@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 #include <algorithm> 
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "merge_sort.h"
 #include "min_heap.h"
@@ -107,6 +109,10 @@ void external_sort(long long sorted_index, int start, int end, bool finish) {
 int main(int argc, char *argv[]) {
     if (argc != 2)
         printf("Wrong parameters for main");
+
+    pid_t pid = getpid();
+
+    cout<<"pid: "<<pid<<endl;
 
     vector<char> number;
     long long sorted_index = 0;
