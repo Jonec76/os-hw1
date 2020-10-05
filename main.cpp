@@ -1,7 +1,6 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -15,11 +14,11 @@
 using namespace std;
 
 const long long int read_chunk_size = 200000000;
-const long long int FULL_FILE_SIZE = 10;
+long long int FULL_FILE_SIZE;
 const int fstream_size = 4000;
 const char *output_sorted_name = "./sorted";
 string output_final_name = "./output.txt";
-const char * TIME_RESULT = "./time.txt";
+char TIME_RESULT[50] ;
 int END = 0;
 int file_idx = 0;
 
@@ -28,9 +27,9 @@ void sort_sub_data(long long int *sub_data, int data_size, long long int data_ct
     merge_sort(sub_data, 1, data_size);
     fstream sorted_file;
     sorted_file.open(output_sorted_name + to_string((int)ceil((double)data_ctr / FULL_FILE_SIZE)-1) + ".txt", ios::out);
-
     if (sorted_file.fail()) {
-        cout << "Can't open sorted_file" << endl;
+        cout<<to_string((int)ceil((double)data_ctr / FULL_FILE_SIZE)-1)<<"??";
+        // cout << "Can't open sorted_file" << endl;
     } else {
         for (long long int i = 0; i < data_size; ++i) {
             sorted_file << sub_data[i] << endl;
@@ -39,7 +38,7 @@ void sort_sub_data(long long int *sub_data, int data_size, long long int data_ct
     }
 }
 
-
+int e_ctr = 0;
 void external_sort(long long sorted_index, int start, int end, bool finish) {
     FILE* pFile = fopen (TIME_RESULT, "a");
     if (pFile == NULL) {
@@ -71,7 +70,6 @@ void external_sort(long long sorted_index, int start, int end, bool finish) {
         node.value = stoi(line);
         min_heap.insert(node);
     }
-
     fstream big_f;
     if(finish)
         output_final_name = "output.txt";
@@ -102,6 +100,7 @@ void external_sort(long long sorted_index, int start, int end, bool finish) {
     big_f.close();
     fprintf (pFile, "external: %f", float( clock () - external_begin_time ) /  CLOCKS_PER_SEC);
     fprintf (pFile, "\n");
+    fclose(pFile);
 }
 
 //main function
@@ -111,13 +110,34 @@ int main(int argc, char *argv[]) {
 
     vector<char> number;
     long long sorted_index = 0;
-    long long int *sub_data = new long long int[FULL_FILE_SIZE];
     string tmp_str;
     long long int data_ctr = 0;
+    string input_data(argv[1], 30);
+
+    sprintf(TIME_RESULT, "time_%lld_%s", FULL_FILE_SIZE, argv[1]);
+    FILE* pFile = fopen (TIME_RESULT, "a");
+    if (pFile == NULL) {
+        printf("Failed to open file %s.", TIME_RESULT);
+        exit(EXIT_FAILURE);
+    }
+
     FILE *fp = freopen(argv[1], "rb", stdin);
     if (!fp) {
         printf("File %s is not exist.", argv[1]);
     }
+
+    fseek(fp, 0L, SEEK_END);
+    long long sz = ftell(fp);
+    fclose(fp);
+    FULL_FILE_SIZE = sz / 10000;
+
+    fp = freopen(argv[1], "rb", stdin);
+    if (!fp) {
+        printf("File %s is not exist.", argv[1]);
+    }
+
+    long long int *sub_data = new long long int[FULL_FILE_SIZE];
+
     clock_t program_begin_time = clock();
 
     do {
@@ -151,13 +171,10 @@ int main(int argc, char *argv[]) {
     fclose(fp);
     delete[] sub_data;
 
-    FILE* pFile = fopen (TIME_RESULT, "a");
-    if (pFile == NULL) {
-        printf("Failed to open file %s.", TIME_RESULT);
-        exit(EXIT_FAILURE);
-    }
+
     fprintf (pFile, "merge: %f", float( clock () - program_begin_time ) /  CLOCKS_PER_SEC);
     fprintf (pFile, "\n");
+    fclose(pFile);
 
     for(int i=0;i<ceil((double)sorted_index / fstream_size);i++){
         int end;
@@ -175,6 +192,11 @@ int main(int argc, char *argv[]) {
         string path = "tmp" + to_string(i) + ".txt";
         const char *p = path.c_str();
         remove(p);
+    }
+    pFile = fopen (TIME_RESULT, "a");
+    if (pFile == NULL) {
+        printf("Failed to open file %s.", TIME_RESULT);
+        exit(EXIT_FAILURE);
     }
     fprintf (pFile, "total: %f", float( clock () - program_begin_time ) /  CLOCKS_PER_SEC);
     fprintf (pFile, "\n");

@@ -17,4 +17,4 @@ clean:
 	find . -name "sorted*" -delete
 	find . -name "output*" -delete
 	find . -name "tmp*" -delete
-	rm main
+	find . -name "*.o main" -delete
