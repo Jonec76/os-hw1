@@ -114,12 +114,7 @@ int main(int argc, char *argv[]) {
     long long int data_ctr = 0;
     string input_data(argv[1], 30);
 
-    sprintf(TIME_RESULT, "time_%lld_%s", FULL_FILE_SIZE, argv[1]);
-    FILE* pFile = fopen (TIME_RESULT, "a");
-    if (pFile == NULL) {
-        printf("Failed to open file %s.", TIME_RESULT);
-        exit(EXIT_FAILURE);
-    }
+
 
     FILE *fp = freopen(argv[1], "rb", stdin);
     if (!fp) {
@@ -129,7 +124,15 @@ int main(int argc, char *argv[]) {
     fseek(fp, 0L, SEEK_END);
     long long sz = ftell(fp);
     fclose(fp);
-    FULL_FILE_SIZE = sz / 10000;
+    FULL_FILE_SIZE = sz / 100;
+    
+
+    sprintf(TIME_RESULT, "time_%lld_%s", FULL_FILE_SIZE, argv[1]);
+    FILE* pFile = fopen (TIME_RESULT, "a");
+    if (pFile == NULL) {
+        printf("Failed to open file %s.", TIME_RESULT);
+        exit(EXIT_FAILURE);
+    }
 
     fp = freopen(argv[1], "rb", stdin);
     if (!fp) {

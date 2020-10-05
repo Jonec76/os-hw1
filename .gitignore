@@ -3,3 +3,4 @@ create_data
 *.txt
 .vscode
 *.o
+*.png
