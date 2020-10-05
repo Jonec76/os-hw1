@@ -18,7 +18,6 @@ long long int FULL_FILE_SIZE;
 const int fstream_size = 4000;
 const char *output_sorted_name = "./sorted";
 string output_final_name = "./output.txt";
-char TIME_RESULT[50] ;
 int END = 0;
 int file_idx = 0;
 
@@ -40,13 +39,6 @@ void sort_sub_data(long long int *sub_data, int data_size, long long int data_ct
 
 int e_ctr = 0;
 void external_sort(long long sorted_index, int start, int end, bool finish) {
-    FILE* pFile = fopen (TIME_RESULT, "a");
-    if (pFile == NULL) {
-        printf("Failed to open file %s.", TIME_RESULT);
-        exit(EXIT_FAILURE);
-    }
-
-    clock_t external_begin_time = clock();
 
     MinHeap min_heap;
     fstream sorted_file[end - start +1];
@@ -98,9 +90,6 @@ void external_sort(long long sorted_index, int start, int end, bool finish) {
         }
     } while (!min_heap.is_empty());
     big_f.close();
-    fprintf (pFile, "external: %f", float( clock () - external_begin_time ) /  CLOCKS_PER_SEC);
-    fprintf (pFile, "\n");
-    fclose(pFile);
 }
 
 //main function
@@ -126,13 +115,6 @@ int main(int argc, char *argv[]) {
     fclose(fp);
     FULL_FILE_SIZE = sz / 100;
     
-
-    sprintf(TIME_RESULT, "time_%lld_%s", FULL_FILE_SIZE, argv[1]);
-    FILE* pFile = fopen (TIME_RESULT, "a");
-    if (pFile == NULL) {
-        printf("Failed to open file %s.", TIME_RESULT);
-        exit(EXIT_FAILURE);
-    }
 
     fp = freopen(argv[1], "rb", stdin);
     if (!fp) {
@@ -175,10 +157,6 @@ int main(int argc, char *argv[]) {
     delete[] sub_data;
 
 
-    fprintf (pFile, "merge: %f", float( clock () - program_begin_time ) /  CLOCKS_PER_SEC);
-    fprintf (pFile, "\n");
-    fclose(pFile);
-
     for(int i=0;i<ceil((double)sorted_index / fstream_size);i++){
         int end;
         bool finish;
@@ -196,12 +174,5 @@ int main(int argc, char *argv[]) {
         const char *p = path.c_str();
         remove(p);
     }
-    pFile = fopen (TIME_RESULT, "a");
-    if (pFile == NULL) {
-        printf("Failed to open file %s.", TIME_RESULT);
-        exit(EXIT_FAILURE);
-    }
-    fprintf (pFile, "total: %f", float( clock () - program_begin_time ) /  CLOCKS_PER_SEC);
-    fprintf (pFile, "\n");
     return 0;
 }
